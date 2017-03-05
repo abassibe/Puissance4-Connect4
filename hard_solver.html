@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html prefix="og: http://ogp.me/ns#">
+    <head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+    <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, maximum-scale=1, user-scalable=no"/>
+
+    <meta property="og:title" content="Connect Four Solver" />
+    <meta property="og:url" content="http://connect4.gamesolver.org/?pos=" />
+    <meta property="og:site_name" content="connect4.gamesolver.org" />
+    <meta property="og:image" content="http://connect4.gamesolver.org/image?pos=" />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="700" />
+    <meta property="og:image:height" content="700" />
+    <meta property="og:type" content="website" />
+    <meta property="og:description" content="Solve and analyse any Connect Four position using and perfect strategy." />
+    <meta property="fb:app_id" content="633063193494750" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+
+    <title>Connect Four Solver</title>
+<script type='text/javascript' src='jquery-2.1.3.min.js'></script>
+
+    <style type='text/css'>
+    body {
+    margin: 0;
+}
+
+div {
+    position: absolute;
+    text-align: center;
+}
+
+@media (orientation:portrait) and (min-aspect-ratio: 2/3)  {
+#container {
+        width: 66.6666666667vh;
+        height: 100vh;
+        top: 0;
+        left:calc(50vw - 33.3333333333vh);
+    }
+    html {font-size: 2.5vh;}
+}
+
+@media (orientation:portrait) and (max-aspect-ratio: 2/3)  {
+#container {
+        width: 100vw;
+        height: 150vw;
+        top: calc(50vh - 75vw);
+        left:0;
+    }
+    html {font-size: 3.75vw;}
+}
+
+@media (orientation:landscape) and (min-aspect-ratio: 3/2) {
+#container {
+        width: 150vh;
+        height: 100vh;
+        top:0;
+        left: calc(50vw - 75vh);
+    }
+    html {font-size: 3.75vh;}
+}
+
+@media (orientation:landscape) and (max-aspect-ratio: 3/2) {
+#container {
+        width: 100vw;
+        height: 66.6666666667vw;
+        top: calc(50vh - 33.3333333333vw);
+        left:0;
+    }
+    html {font-size: 2.5vw;}
+}
+
+@media (orientation:portrait) {
+#nav {
+        left:0%;
+        top:0%;
+        width:100%;
+        height:33.3333333333%;
+    }
+  #board {
+        left:0;
+        top: 33.3333333333%;
+        width: 100%;
+        height: 66.6666666667%;
+    }
+  #title1 {left:0%;top:0%; width:50%; height:40%;}
+  #share  {left:50%; top:00%; width:50%; height:40%;}
+  #button_div {left:0%; top:40%; width:50%; height:60%;}
+  #player_div {left:50%; top:60%; width:50%; height:40%;}
+}
+
+@media (orientation:landscape) {
+#nav {
+        left: 0%;
+        top:0%;
+        width: 33.3333333333%;
+        height:100%;
+    }
+  #board {
+        left:33.3333333333%;
+        top:0%;
+        width: 66.6666666667%;
+        height: 100%;
+    }
+  #title1 {left:0%; top:0%; width:100%; height:20%;}
+  #share  {left:0%; top:20%; width:100%; height:20%;}
+  #button_div {left:0%; top:50%; width:100%; height:30%;}
+  #player_div {left:0%; top:80%; width:100%; height:20%;}
+}
+
+
+#about  {top:0%;}
+#new    {top:33%;}
+#back   {top:66%;}
+#player_1 {top:0%;}
+#player_2 {top:50%;}
+
+
+div.col0 {left:0%;}
+div.col1 {left:14.285714286%;}
+div.col2 {left:28.571428571%;}
+div.col3 {left:42.857142857%;}
+div.col4 {left:57.142857143%;}
+div.col5 {left:71.428571429%;}
+div.col6 {left:85.714285714%;}
+
+
+
+.button {
+    width:75%;
+    left:0;
+    right:0;
+    margin: auto;
+    height: 1.5em;
+    line-height: 1.5em;
+    font-weight: bold;
+    border-style: solid;
+    border-width: 0.2em;
+    border-color: #8685a2;
+    background-color: #a6a5c9;
+    -webkit-border-radius: 1em;
+    -moz-border-radius: 1em;
+    border-radius: 0.5em;
+    cursor: pointer;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+}
+
+
+
+.active {
+    opacity: 1;
+}
+
+.inactive {
+    opacity: 0.50;
+    border-color: #ffffff;
+}
+
+
+#player_1 {
+    background-image:url(red.svg);
+    background-size: 1.5em 1.5em;
+    background-repeat: no-repeat;
+    background-position:left center;
+}
+#player_2 {
+    background-image:url(yellow.svg);
+    background-size: 1.5em 1.5em;
+    background-repeat: no-repeat;
+    background-position:left center;
+}
+
+
+html {
+    font-family: Arial, Helvetica, sans-serif;
+}
+#title1 {
+    font-size: 1.25em;
+    font-weight: bold;
+}
+
+#solution_header {
+    left:0;
+    top: 85.714285714%;
+    width:100%;
+    height: 1em;
+    line-height: 1em;
+}
+
+#solution {
+    left:0;
+    top: 90.476190476%;
+    height:9.523809524%;
+    width:100%;
+}
+
+#hide_solution_div {
+    left:0;
+    top: 90.476190476%;
+    height:9.523809524%;
+    width:100%;
+    z-index: 50;
+    background-color: white;
+}
+
+#about_div {
+    top: 0;
+    left: 0;
+    padding: 2.5%;
+    height: 95%;
+    display: none;
+    background-color: white;
+    opacity: 0.85;
+    z-index: 100;
+    text-align: left;
+    overflow-y:auto;
+}
+
+
+div.social {
+    display: inline-block;
+    position: relative;
+    width: 2em;
+    height: 2em;
+    cursor: pointer;
+}
+
+div.twitter {
+    background-image:url(twitter.svg);
+}
+div.facebook {
+    background-image:url(facebook.svg);
+}
+div.gplus {
+    background-image:url(gplus.svg);
+}
+
+
+.board {
+    background-image:url(board.svg);
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    height:14.285714286%;
+    width:14.285714286%;
+    z-index:2;
+}
+
+.solution {
+    width: 14.285714286%;
+    height: 2em;
+    line-height: 2em;
+    background-image:none;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.win {
+    background-image:url(win.png);
+    width:14.285714286%;
+    height:14.285714286%;
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    z-index:1;
+}
+
+.player1 {
+    background-image:url(red.svg);
+    width:14.285714286%;
+    height:14.285714286%;
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    z-index:0;
+}
+.player2 {
+    background-image:url(yellow.svg);
+    width:14.285714286%;
+    height:14.285714286%;
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    z-index:0;
+}
+
+</style>
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'UA-59106405-1', 'auto');
+ga('send', 'pageview');
+</script>
+
+<script type='text/javascript'>//<![CDATA[
+
+
+var stone = [];
+var mark = [];
+var height = [0, 0, 0, 0, 0, 0, 0];
+var moves = [];
+var solutions = [];
+var board = [
+    [0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0]];
+var won = false;
+
+
+function auto_play() {
+    var id = "#player_" + (moves.length % 2 + 1);
+    return $(id).text() == "auto";
+}
+
+function canplay(col) {
+    if(auto_play()) return false;
+    return !won && height[col] < 6;
+}
+
+function play(col, dont_compute) {
+    board[col][height[col]] = 1 + moves.length % 2;
+    drop(stone[moves.length], col, height[col]);
+    height[col]++;
+    moves.push(col);
+    win();
+    window.history.replaceState(null, null, "?pos="+get_pos());
+    if(dont_compute) return;
+    print_solution();
+}
+
+
+function click_handler(col) {
+    return function () {
+        if(canplay(col)) play(col);
+    };
+}
+
+
+
+
+function print_next_player() {
+    if(won) {
+        $("#player_1").removeClass("active").addClass("inactive");
+        $("#player_2").removeClass("active").addClass("inactive");
+    }
+    else if(moves.length % 2 == 0) {
+        $("#player_1").removeClass("inactive").addClass("active");
+        $("#player_2").removeClass("active").addClass("inactive");
+    }
+    else {
+        $("#player_1").removeClass("active").addClass("inactive");
+        $("#player_2").removeClass("inactive").addClass("active");
+    }
+}
+
+function drop(img, x, y) {
+    img.css("left", (x*100/7)+"%");
+    img.css("top", (-100/7)+"%");
+    img.show();
+    img.animate({top: ((5-y)*100/7)+"%"}, 400, "linear", show_win);
+}
+
+function mark_win(x, y, dx, dy) {
+    for (var i = 0; i < 4; i++) {
+        mark[i].css("left", ((x + i * dx)*100/7) + '%');
+        mark[i].css("top", ((5 - (y + i * dy))*100/7) + '%');
+    }
+}
+
+function show_win() {
+    if(won)
+        for(var i = 0; i < 4; i++) {
+            mark[i].show();
+        }
+}
+
+
+function win() {
+    var x = moves[moves.length - 1];
+    var y = height[x] - 1;
+
+    if (y >= 3 && board[x][y - 3] == board[x][y] && board[x][y - 2] == board[x][y] && board[x][y - 1] == board[x][y]) {
+        mark_win(x, y, 0, -1);
+        won = true;
+    }
+    for (var dy = -1; dy <= 1; dy++) {
+        var nb = 0;
+        for (var dx = 1; x + dx < 7 && y + dx * dy < 6 && y + dx * dy >= 0; dx++)
+            if (board[x + dx][y + dx * dy] == board[x][y]) nb++;
+            else break;
+        for (var dx = -1; x + dx >= 0 && y + dx * dy < 6 && y + dx * dy >= 0; dx--)
+            if (board[x + dx][y + dx * dy] == board[x][y]) nb++;
+            else break;
+        if (nb >= 3) {
+            mark_win(x + dx + 1, y + (dx + 1) * dy, 1, dy);
+            won = true;
+        }
+    }
+}
+
+
+function get_pos() {
+    var pos = "";
+    for (var i = 0; i < moves.length; i++) pos = pos + (moves[i] + 1);
+    return pos;
+}
+
+function  print_solution() {
+    print_next_player();
+    if(won) {
+        if(moves.length % 2 == 1) $("#solution_header").text("Player 1 won");
+        else $("#solution_header").text("Player 2 won");
+        $(".solution").text("").css("background-image","none");
+        return;
+    }
+    if(moves.length == 42) {
+        $("#solution_header").text("Draw game");
+        $(".solution").text("").css("background-image","none");
+        return;
+    }
+
+    var json = solutions[moves.length];
+    if(json === undefined || json.pos !== get_pos()) { //TODO check != ??
+        compute_solution();
+        return;
+    }
+
+    if(auto_play()) {
+        var best = -100;
+        var possible = [];
+        for (var i = 0; i < 7; i++)
+            if(json.score[i] != 100 && json.score[i] > best) {
+                best = json.score[i];
+                possible = [i];
+            }
+            else if(json.score[i] == best) possible.push(i);
+
+        var col = possible[Math.floor((Math.random() * possible.length))];
+        play(col);
+    }
+
+    else {
+
+        var best = -100;
+        for (var i = 0; i < 7; i++)
+            if(json.score[i] != 100 && json.score[i] > best) best = json.score[i];
+
+        var nb_best = 0;
+        for (var i = 0; i < 7; i++)
+            if(best == 0 && json.score[i] == 0) nb_best++;
+            else if(best > 0 && json.score[i] > 0 && json.score[i] != 100) nb_best++;
+
+
+
+        for (var i = 0; i < 7; i++) {
+            if(json.score[i] == 100) {
+                $("#sol" + i).text("").css("background-image","none");
+            }
+            else {
+                $("#sol" + i).text(json.score[i]);
+                if(json.score[i] > 0) {
+                    if(json.score[i] == best) $("#sol" + i).css("background-image","url(up_star.png)");
+                    else $("#sol" + i).css("background-image","url(up.png)");
+                }
+                else if(json.score[i] < 0) {
+                    if(json.score[i] == best) $("#sol" + i).css("background-image","url(down_star.png)");
+                    else $("#sol" + i).css("background-image","url(down.png)");
+                }
+                else {
+                    if(json.score[i] == best) $("#sol" + i).css("background-image","url(neutral_star.png)");
+                    else $("#sol" + i).css("background-image","url(neutral.png)");
+                }
+            }
+        }
+
+        var player = moves.length%2 == 0 ? "Red" : "Yellow";
+
+        if(best > 0) {
+            var nb_moves = Math.floor((45 - moves.length)/2) - best;
+            $("#solution_header").text(player + " can win in " + nb_moves + " move" + (nb_moves>1?"s":"") + " (" + nb_best + " winning move" + (nb_best>1?"s":"") + ")");
+        }
+        else if(best < 0) {
+            var nb_moves = Math.floor((44 - moves.length)/2) + best;
+            $("#solution_header").text(player + " loses in " + nb_moves + " move" + (nb_moves>1?"s":""));
+        }
+        else {
+            var nb_moves = Math.floor((43 - moves.length)/2);
+            $("#solution_header").text(player + " can draw (" + nb_best + " possible move" + (nb_best>1?"s":"") + ")");
+        }
+    }
+}
+
+
+
+function compute_solution() {
+    $("#solution_header").text("computing solution... ");
+    $(".solution").text("").css("background-image","none");
+    $.getJSON("solve", {pos: get_pos()}, function(json) {
+        solutions[json.pos.length] = json;
+        print_solution();
+    });
+}
+
+
+function back(event) {
+
+    if (moves.length > 0) {
+        var col = moves.pop();
+        height[col]--;
+        stone[moves.length].hide();
+        board[col][height[col]] = 0;
+        if (won) {
+            won = false;
+            $(".win").hide();
+        }
+        if(auto_play())
+            back();
+        else {
+            print_solution();
+            if(event == undefined) history.replaceState(null, null, "?pos="+get_pos());
+            else history.pushState(null, null, "?pos="+get_pos());
+        }
+    }
+    else if(auto_play()) {
+        print_solution();
+    }
+
+}
+
+function query_param(key) {
+    var match = location.search.match(new RegExp("[?&]"+key+"=([^&]+)(&|$)"));
+    return (match == null) ? "" : match[1];
+}
+
+function reset() {
+    if(moves.length > 0) {
+        moves = [];
+        for(var i =0; i < 7; i++) {
+            height[i] = 0;
+            for(var j =0; j < 6; j++) board[i][j] = 0;
+        }
+        won = false;
+        $(".win").hide();
+        $(".player1").hide();
+        $(".player2").hide();
+        print_solution();
+        history.replaceState(null, null, "?pos="+get_pos());
+    }
+}
+
+function init() {
+    for (var x = 0; x < 7; x++) {
+        for (var y = 0; y < 6; y++) {
+            var v = $("<div/>");
+            v.addClass("board");
+            v.css("left", (x*100/7)+'%');
+            v.css("top",  ((5-y)*100/7)+'%');
+            v.click(click_handler(x));
+            v.appendTo("#board");
+        }
+    }
+
+    for (i = 0; i < 42; i++) {
+        var v = $("<div/>");
+        if (i % 2 === 0) v.addClass("player1");
+        else v.addClass("player2");
+        v.hide();
+        v.appendTo("#board");
+        stone[i] = v;
+    }
+    for (i = 0; i < 4; i++) {
+        var v = $("<div/>");
+        v.addClass("win");
+        v.hide();
+        v.appendTo("#board");
+        mark[i] = v;
+    }
+
+    var pos = query_param("pos");
+    history.replaceState(null, null, "?pos=");
+    history.pushState(null, null, "?pos=");
+    $(window).on("popstate", back);
+
+    while(pos.length > 0) {
+        var c = pos.charCodeAt(0) - "1".charCodeAt(0);
+        if(c >= 0 && c <= 6 && canplay(c)) play(c, true);
+        else break;
+        pos = pos.substr(1);
+    }
+    print_solution();
+}
+
+
+
+function about() {
+    $("#about_div").fadeToggle();
+}
+
+function toggle_solution() {
+    $("#hide_solution_div").fadeToggle();
+}
+
+function toggle_player1() {
+    if($("#player_1").text() == "manual") {
+        $("#player_1").text("auto");
+        $("#player_2").text("manual");
+        print_solution();
+    }
+    else
+        $("#player_1").text("manual");
+}
+
+function toggle_player2() {
+    if($("#player_2").text() == "manual") {
+        $("#player_2").text("auto");
+        $("#player_1").text("manual");
+        print_solution();
+    }
+    else
+        $("#player_2").text("manual");
+}
+
+function share(url) {
+    var width = 550;
+    var height = 420;
+    var winHeight = screen.height;
+    var winWidth = screen.width;
+    var windowOptions = "scrollbars=yes,resizable=yes,toolbar=no,location=yes";
+    var left = Math.round((winWidth / 2) - (width / 2));
+    var top = 0;
+    if (winHeight > height) {
+        top = Math.round((winHeight / 2) - (height / 2));
+    }
+    window.open(url, "share", windowOptions + ",width=" + width + ",height=" + height + ",left=" + left + ",top=" + top);
+}
+
+
+function share_twitter() {
+    var comment = $("#solution_header").text();
+    var url = "https://twitter.com/intent/tweet?text=" + encodeURIComponent("Solve this #Connect4 position: http://connect4.gamesolver.org/?pos=" + get_pos() + " " + comment);
+    share(url);
+    return false;
+}
+
+function share_facebook() {
+    var url = "https://www.facebook.com/dialog/share?app_id=633063193494750&display=popup"
+        + "&href=" + encodeURIComponent("http://connect4.gamesolver.org/?pos=" + get_pos())
+        + "&redirect_uri=" + encodeURIComponent("http://connect4.gamesolver.org/close.html");
+    share(url);
+    return false;
+}
+
+function share_gplus() {
+    var url = "https://plus.google.com/share?url=" + encodeURIComponent("http://connect4.gamesolver.org/?pos=" + get_pos());
+    share(url);
+    return false;
+}
+
+$(window).load(function(){init();});
+
+//]]>
+</script>
+
+
+</head>
+<body>
+
+<div id="container">
+    <div id="nav" class="ui-widget">
+    <div id="title1">Connect four<br />perfect solver</div>
+
+<div id="share">
+    Share this position:<br />
+<div class="social twitter" onclick="share_twitter()"> </div>
+    <div class="social facebook" onclick="share_facebook()"> </div>
+    <div class="social gplus" onclick="share_gplus()"> </div>
+    </div>
+
+
+    <div id="button_div">
+    <div id="about" onclick="about()" class="button">about</div>
+    <div id="new" onclick="reset()" class="button">new</div>
+    <div id="back" onclick="back()" class="button">back</div>
+    </div>
+    <div id="player_div">
+    <div id="player_1" class="button" onclick="toggle_player1()">manual</div>
+    <div id="player_2" class="button" onclick="toggle_player2()">manual</div>
+    </div>
+    </div>
+
+    <div id="board">
+    <div id="hide_solution_div" onclick="toggle_solution()"><a href="javascript:;">Show solution</a></div>
+<div id="solution_header" onclick="toggle_solution()"></div>
+    <div id="solution" onclick="toggle_solution()">
+    <div id="sol0" class="solution col0"></div>
+    <div id="sol1" class="solution col1"></div>
+    <div id="sol2" class="solution col2"></div>
+    <div id="sol3" class="solution col3"></div>
+    <div id="sol4" class="solution col4"></div>
+    <div id="sol5" class="solution col5"></div>
+    <div id="sol6" class="solution col6"></div>
+    </div>
+    <div id="about_div" onclick="about()">
+
+    <h4>Rules</h4>
+    <p><a href="http://en.wikipedia.org/wiki/Connect_Four">Connect four</a> (or <em>Four in a row</em>) is a two players strategy game. Each player drops alternatively a chip of his colors. The first player to align four chips wins.</p>
+<h4>Solver</h4>
+<p>The game was solved in 1988, and first player (red) can always win. This solver compute the outcome of any position assuming both players play perfectly. When you choose to show the solution, you get a score for each playable column: winning moves have a positive score and losing moves have a negative score. The absolute value of the score gives you the number of moves <em>before</em> the end of the game. Hence best moves have highest scores.</p>
+<h4>Play against the AI</h4>
+<p>Both player can play automatically following a perfect strategy. You just need to toggle the manual/auto mode of the player by clicking on his buttton. Note that it is impossible to win if you let the AI play first.</p>
+<h4>Share a position</h4>
+<p>You can share interesting positions with the different share buttons or just copy the url of the position (containing the "pos" parameter).</p>
+<h4>About the algorithm.</h4>
+<p>The solver uses <a href="http://en.wikipedia.org/wiki/Alpha%E2%80%93beta_pruning">alpha beta pruning</a> with a lot of tricks and optimizations. I've started a step-by-step <a href="http://blog.gamesolver.org">tutorial explaining how to solve Connect Four</a>.</p>
+<h4>The author: <a href="https://fr.linkedin.com/in/pascalpons">Pascal Pons</a></h4>
+<p>This project is a pure hobby. Do not hesitate to send me comments, suggestions or bug reports at <a href="mailto:connect4@gamesolver.org">connect4@gamesolver.org</a>.</p>
+</div>
+</div>
+</div>
+</body>
+
+</html>
+
+
+
+

@@ -1,0 +1,4 @@
+/Applications/CLion.app/Contents/bin/cmake/bin/cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles" /Volumes/SD_CACHE/Dropbox_42/Dropbox/42_LOCAL/Documents/ANNEE_2/RUSHES/PUISSANCE_4
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /Volumes/SD_CACHE/Dropbox_42/Dropbox/42_LOCAL/Documents/ANNEE_2/RUSHES/PUISSANCE_4/cmake-build-debug
