@@ -13,23 +13,26 @@
 NAME	=	puissance4
 CC		=	gcc -Wall -Werror -Wdeprecated-declarations -Wextra
 CCO		=	gcc -o
-LIB		=	-L ft_printf/ -lftprintf -L libft/ -lft
+LIB		=	-L ft_printf/ -lftprintf -L libft/ -lft -lncurses
 FLAGS	=	-Wall -Werror -Wextra
 
 INC		=	-I libft/ -I ft_printf/
 
-SRC		=	main.c			\
-			connect_four.c	\
-			input.c			\
-			render.c		\
-			computer.c		\
-			check.c			\
-			easy.c			\
-			easy_util.c		\
-			medium.c		\
-			hard.c			\
-			hard_util.c		\
-			easy_verif.c	\
+SRC		=	main.c				\
+			connect_four.c		\
+			input.c				\
+			render.c			\
+			computer.c			\
+			check.c				\
+			easy.c				\
+			easy_util.c			\
+			easy_verif.c		\
+			medium.c			\
+			medium_verif.c		\
+			medium_util.c		\
+			vector.c			\
+			vector_mem.c		\
+			render_ncurses.c	\
 
 
 OBJ		=	$(SRC:.c=.o) #interesting compilation method

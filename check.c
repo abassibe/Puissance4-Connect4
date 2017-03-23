@@ -44,8 +44,9 @@ t_bool		are_four_connected_diagonal(int p)
 	{
 		J = 0;
 		while (++J < g_connect.input_h)
-			if (g_connect.grid[I][J] == p && g_connect.grid[I - 1][J+1] == p
-&& g_connect.grid[I - 2][J + 2] == p && g_connect.grid[I - 3][J + 3] == p)
+			if (g_connect.grid[I][J] == p && g_connect.grid[I - 1][J + 1] == p
+				&& g_connect.grid[I - 2][J + 2] == p &&
+					g_connect.grid[I - 3][J + 3] == p)
 				return (true);
 	}
 	I = 2;
@@ -54,8 +55,9 @@ t_bool		are_four_connected_diagonal(int p)
 		J = 2;
 		while (++J < g_connect.input_h)
 			if (g_connect.grid[I][J] == p && g_connect.grid[I - 1][J - 1] == p
-&& g_connect.grid[I - 2][J - 2] == p && g_connect.grid[I - 3][J - 3] == p)
-				return true;
+				&& g_connect.grid[I - 2][J - 2] == p &&
+					g_connect.grid[I - 3][J - 3] == p)
+				return (true);
 	}
 	return (false);
 }
@@ -65,6 +67,11 @@ t_bool		check_win(int p)
 	if (!are_four_connected_h_v(p))
 		if (!are_four_connected_diagonal(p))
 			return (false);
-	ft_printf("PLAYER %i WINS\n", p);
+	if (g_connect.render_mode != RENDER_NCURSES)
+		ft_printf("PLAYER %i WINS\n", p);
+	g_connect.winner = p;
+	g_connect.is_play = false;
+	if (g_connect.render_mode == RENDER_NCURSES)
+		render_end();
 	return (true);
 }

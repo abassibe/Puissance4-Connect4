@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   render.c                                           :+:      :+:    :+:   */
+/*   vector.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: byoung-w <byoung-w@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -10,41 +10,44 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "connect_four.h"
+#include "vector.h"
 
-void		render_newline(void)
+void		vector_init(t_vector *v)
 {
-	ft_printf("\n");
-	g_connect.i = -1;
+	v->capacity = VECTOR_INIT_CAPACITY;
+	v->total = 0;
+	v->items = malloc(sizeof(void *) * v->capacity);
 }
 
-void		render_terminal(void)
+void		vector_init_void(t_vector *v, int size)
 {
-	g_connect.i = -1;
-	g_connect.j = -1;
-	g_connect.i += ft_printf("--ROUND %i--", g_connect.round) / 2;
-	while (++g_connect.i < g_connect.input_w - 1)
-		ft_printf("--");
-	render_newline();
-	while (++g_connect.j < g_connect.input_h)
+	v->capacity = size;
+	v->total = 0;
+	v->items = malloc(sizeof(void *) * v->capacity);
+}
+
+void		vector_init_int(t_vector *v, int size)
+{
+	int		i;
+
+	v->capacity = size;
+	v->total = 0;
+	v->items = malloc(sizeof(void *) * v->capacity);
+	i = -1;
+	while (++i < v->capacity)
 	{
-		while (++g_connect.i < g_connect.input_w)
-			ft_printf("%i ", g_connect.grid[g_connect.i][g_connect.j]);
-		render_newline();
+		VECTOR_ADD(*v, 0);
 	}
 }
 
-void		render_ncurses(void)
+int			vector_total(t_vector *v)
 {
-	render_start();
-	render_map();
-	render_end();
+	return (v->total);
 }
 
-void		game_render(void)
+void		vector_add(t_vector *v, void *item)
 {
-	if (g_connect.render_mode == RENDER_TERMINAL)
-		render_terminal();
-	else if (g_connect.render_mode == RENDER_NCURSES)
-		render_ncurses();
+	if (v->capacity == v->total)
+		vector_resize(v, v->capacity * 2);
+	v->items[v->total++] = item;
 }

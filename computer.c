@@ -6,38 +6,42 @@
 /*   By: byoung-w <byoung-w@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2014/09/08 14:49:06 by byoung-w          #+#    #+#             */
-/*   Updated: 2017/03/05 18:37:08 by abassibe         ###   ########.fr       */
+/*   Updated: 2017/03/05 21:33:05 by abassibe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "connect_four.h"
 
-void		com_hard(void)
-{
-	int		result;
-
-	if (!D_HARD_P1.init)
-	{
-result = 0;
-	}
-}
-
-void		com_medium(void)
-{
-
-}
-
-void		com_easy(void)
+t_bool		com_easy(void)
 {
 	if (easy_verif(ID_COMPUTER) == 1)
-		return ;
+		return (true);
 	else if (easy_verif(ID_PLAYER) == 1)
 	{
 		P = 0;
-		return ;
+		return (true);
 	}
-	else
+	else if (g_connect.difficulty == DIFFICULTY_EASY)
+	{
 		easy_random_pick();
+		return (true);
+	}
+	return (false);
+}
+
+t_bool		com_medium(void)
+{
+	if (com_easy())
+		return (true);
+	else if (medium_verif(ID_COMPUTER) == 1)
+		return (true);
+	else if (medium_verif(ID_PLAYER) == 1)
+	{
+		P = 0;
+		return (true);
+	}
+	medium_random_pick();
+	return (false);
 }
 
 void		computer_turn(void)
@@ -46,6 +50,5 @@ void		computer_turn(void)
 		com_easy();
 	if (g_connect.difficulty == DIFFICULTY_MEDIUM)
 		com_medium();
-	if (g_connect.difficulty == DIFFICULTY_HARD)
-		com_hard();
+	g_connect.round++;
 }

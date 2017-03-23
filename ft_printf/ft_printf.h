@@ -26,6 +26,7 @@
 
 # ifndef T_BOOL
 #  define T_BOOL
+
 typedef enum
 {
 	false,

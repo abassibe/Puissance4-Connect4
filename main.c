@@ -28,10 +28,14 @@ int			main(int argc, char **argv)
 		return (error_arguments());
 	if (g_connect.input_w > MAX_WIDTH || g_connect.input_h > MAX_HEIGHT)
 		return (error_arguments());
+	setup_difficulty();
+	setup_render();
 	setup_game();
 	if (g_connect.error > 0)
 		return (error_arguments());
+	graphics_start();
 	game_loop();
+	graphics_end();
 	end_game();
 	return (0);
 }
